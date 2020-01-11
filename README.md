@@ -2,5 +2,4 @@
  A tool for removing the pauses DMing a session.
 
 Contributors:
-Kyle Hoffmann
-Graham MacDonald
+Kyle Hoffmann, Graham MacDonald
