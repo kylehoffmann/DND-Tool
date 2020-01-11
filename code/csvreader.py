@@ -6,7 +6,7 @@
 
 import csv
 
-with open('Magic10Normal5Items.csv', newline='') as csvfile:
+with open('../Resources/Magic10Normal5Items.csv', newline='') as csvfile:
     spamreader = csv.reader(csvfile, delimiter=',')
     for row in spamreader:
         
