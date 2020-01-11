@@ -5,15 +5,19 @@
 
 
 import csv
+import sys
 
-with open('../Resources/Magic10Normal5Items.csv', newline='') as csvfile:
+readFileName = '../Resources/Magic10Normal5Items.csv'
+if len(sys.argv) > 1:
+	readFileName = sys.argv[1]
+
+with open(readFileName, newline='') as csvfile:
     spamreader = csv.reader(csvfile, delimiter=',')
     for row in spamreader:
-        
+    	#pass      
         print(' -  '.join(row))
 
-
-# In[ ]:
+#print("Hello World")
 
 
 
