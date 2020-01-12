@@ -1,7 +1,3 @@
-import sys
-
-
-
 #Input: The item ID(int), the name(string), description(string) and value in copper(int)
 #Return: Single dictionary containg the items
 #Function: Creates a default item with essential parameters for limited testing
@@ -23,6 +19,12 @@ def DefaultID():
 	desc = "Made by Goblins DC15 Con save to avoid 1d4 rounds of incapcatiation from vomiting. Goblins eh? "
 	value = 1
 	return ItemInit(ID, name, desc, value)
+
+#Input: Dictionary containing full item details
+#Return: Returns item ID as an int
+#Function: When called with an item dictonary gives the item's ID
+def GetID(item):
+	return item["ID"]
 
 #Input: Dictionary containing full item details
 #Return: Nothing
@@ -48,8 +50,11 @@ def PartialItemPrint (item, traits):
 #starting function
 while True:
 	item = DefaultID()
-	#FullItemPrint(item)
+	FullItemPrint(item)
+	print("")
 	IDPrint(item)
+	print("")
+	print(GetID(item))
 	break
 
 
