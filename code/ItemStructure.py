@@ -48,15 +48,17 @@ def PartialItemPrint (item, traits):
 		print(trait + ":", item[trait])
 
 #starting function, it's over 9000!
-for i in range(0, 9001):
+def __main():
 	item = DefaultID()
 	FullItemPrint(item)
 	print("")
 	IDPrint(item)
 	print("")
 	print(GetID(item))
-	break
 
+
+if __name__ == '__main__':
+    __main()
 
 
 
