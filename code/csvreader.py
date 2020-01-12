@@ -24,7 +24,7 @@ def readCSVContents(readFileName):
 	        print(' -  '.join(row))
 
 # Main for testing, This will allow the user to specify a test csv file.
-def main():
+def __main():
 	# Define a default csv to open
 	readFileName = '../Resources/Magic10Normal5Items.csv'
 
@@ -37,4 +37,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    __main()
