@@ -48,14 +48,14 @@ def PartialItemPrint (item, traits):
 		print(trait + ":", item[trait])
 
 #starting function
-while True:
+for i in range(0, 9001):
 	item = DefaultID()
 	FullItemPrint(item)
 	print("")
 	IDPrint(item)
 	print("")
 	print(GetID(item))
-	break
+
 
 
 
