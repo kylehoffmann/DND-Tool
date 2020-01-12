@@ -5,6 +5,7 @@
 #	stored in the file. This value is then updated in the config.json file.
 # This program will generate a configfile if it is missing, but it will use the default 
 #	"./ItemList.csv" as the item list location if it has to do so.
+# In the current form it doesn't validate the items in the list are real items, it expects a valid list.
 #
 # Coded By:
 # Kyle Hoffmann
@@ -13,11 +14,11 @@ import csv
 import sys
 import json
 
-# itemListconfigUpdater
+# itemListConfigUpdater( Name of the file to be used as an item list )
 #
 # Takes the name of an item file name, then counts the number of items and
 #	updates the config file with a number of items and the new item file name.
-def itemListconfigUpdater(readFileName):
+def itemListConfigUpdater(readFileName):
 	# Initlaize Valiables
 	lineCount = 0
 
@@ -72,7 +73,7 @@ def itemListconfigUpdater(readFileName):
 	    json.dump(cfData, fp, indent=4)
 
 	# Inform the user that program was sucessful
-	print("Update successful\n"\
+	print("Item list Update successful\n"\
 		"Max items updated to", lineCount, "\n")
 
 
@@ -80,7 +81,7 @@ def itemListconfigUpdater(readFileName):
 #
 # Looks for a user defined list of items to use. hands an empty string forward if none is found.
 #	It calls the real function that updates the confige file with the item list's info.
-def main():
+def __main():
 
 	# Initlaize an the readfile to have no name.
 	readFileName = ""
@@ -89,8 +90,8 @@ def main():
 	if len(sys.argv) > 1:
 		readFileName = sys.argv[1]
 
-	itemListconfigUpdater(readFileName)
+	itemListConfigUpdater(readFileName)
 
 
 if __name__ == '__main__':
-    main()
+    __main()
