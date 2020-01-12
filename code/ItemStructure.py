@@ -1,7 +1,3 @@
-import sys
-
-
-
 #Input: The item ID(int), the name(string), description(string) and value in copper(int)
 #Return: Single dictionary containg the items
 #Function: Creates a default item with essential parameters for limited testing
@@ -25,6 +21,12 @@ def DefaultID():
 	return ItemInit(ID, name, desc, value)
 
 #Input: Dictionary containing full item details
+#Return: Returns item ID as an int
+#Function: When called with an item dictonary gives the item's ID
+def GetID(item):
+	return item["ID"]
+
+#Input: Dictionary containing full item details
 #Return: Nothing
 #Function: Prints all item traits to cmd with formatting
 def FullItemPrint (item):
@@ -45,12 +47,18 @@ def PartialItemPrint (item, traits):
 	for trait in traits:
 		print(trait + ":", item[trait])
 
-#starting function
-while True:
+#starting function only runs if program is run independently
+def __main():
 	item = DefaultID()
-	#FullItemPrint(item)
+	FullItemPrint(item)
+	print("")
 	IDPrint(item)
-	break
+	print("")
+	print(GetID(item))
+
+
+if __name__ == '__main__':
+    __main()
 
 
 
