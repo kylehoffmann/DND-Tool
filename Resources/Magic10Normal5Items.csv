@@ -1,3 +1,4 @@
+ID,name,description,value
 1,Potion of Water Breathing,"A potion, that when drunk allows the user to breath underwater for 1 hour.",Uncommon
 2,Potion of Blood,"A potion of blood. When drunk the user must pass a dc 10 con save, on success they heal 4d4 + 4 hp and heal from all magical and nonmagical bleeding. On a failure they heal 1d4 + 1 and everything they eat for the next 24 hours tastes like rust.",Rare
 3,Crawler mucus,"Crawler Mucus (Contact): This poison must be harvested from a dead or Incapacitated crawler. A creature subjected to this poison must succeed on a DC 13 Constitution saving throw or be Poisoned for 1 minute. The Poisoned creature is Paralyzed. The creature can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success.",20000
