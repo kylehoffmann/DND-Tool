@@ -27,8 +27,8 @@ def readCSVContents(readFileName):
 	        item = IS.ItemInit(row[0],row[1],row[2],row[3])
 	        items.append(item)
 
-	#for item in items:
-		#print (IS.FullItemPrint(item))
+	for item in items:
+		IS.FullItemPrint(item)
 
 
  
