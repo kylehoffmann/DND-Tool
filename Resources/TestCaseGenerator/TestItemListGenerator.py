@@ -9,6 +9,18 @@ import csv
 import json
 import os
 import sys
+import random
+
+def insertRecordInNewFileData(fileData, newRecord, Randomize):
+	if Randomize.lower() == "no" or Randomize.lower() == "n":
+		# If the goal isn't to randomize append data
+		fileData.append(newRecord)
+	else:
+		insertIndex = random.randrange(1, len(fileData)+1)
+		print(insertIndex)
+		fileData.insert(insertIndex, newRecord)
+
+
 
 # configFileValidateAndRepair
 def generateTestFile(writeFileName):
@@ -48,7 +60,13 @@ def generateTestFile(writeFileName):
 					break
 
 				# Append the header or item to the output file contents
-				tfData.append(row)
+				if counter == 0:
+					# The first row is the column headers, it should always be this way
+					# ToDo: Add a config to allow violation of this.
+					tfData.append(row)
+				else:
+					# Add the rest of the files sequentially or randomly based on the config file.
+					insertRecordInNewFileData(tfData, row, cfData["RandomValues"])
 
 				# Count the number of items recoreded. This will be the item number of the next item to be recorded
 				counter += 1
