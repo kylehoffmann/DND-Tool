@@ -33,7 +33,7 @@ def itemListConfigUpdater(readFileName):
 			cfData = json.load(configFile)
 		except OSError:
 			# Open file failed, nothing is done as a file will be generated.
-		    pass
+			pass
 			
 
 		# Prints the name of the item list csv in the config file. For testing.
@@ -50,17 +50,17 @@ def itemListConfigUpdater(readFileName):
 	    itemFile = open(readFileName, 'r')
 	except OSError:
 		# Open file failed, inform the user and exit the program.
-	    print("Could not open/read file:", readFileName)
-	    sys.exit()
+		print("Could not open/read file:", readFileName)
+		sys.exit()
 
 	# File Exists open and do stuff.
 	with itemFile:
 
 		# Loop though line in the file
-	    reader = csv.reader(itemFile)
-	    for row in reader:
-	    	# Count the number of items in the file.
-	        lineCount += 1
+		reader = csv.reader(itemFile)
+		for row in reader:
+			# Count the number of items in the file.
+			lineCount += 1
 
 	# Print the number of lines. For testing.
 	# print(lineCount)
@@ -74,7 +74,7 @@ def itemListConfigUpdater(readFileName):
 
 	# Save the updated ConfigFile
 	with open('config.json', 'w') as fp:
-	    json.dump(cfData, fp, indent=4)
+		json.dump(cfData, fp, indent=4)
 
 	# Inform the user that program was sucessful
 	print("Item list Update successful\n"\
@@ -98,4 +98,4 @@ def __main():
 
 
 if __name__ == '__main__':
-    __main()
+	__main()

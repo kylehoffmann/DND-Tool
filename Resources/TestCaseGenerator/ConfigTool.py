@@ -24,8 +24,9 @@ def configFileValidateAndRepair():
 		configFile = open('./config.json', 'r')
 		cfData = json.load(configFile)
 	except OSError:
-		# Open file failed, inform the user and exit the program.
-	    pass
+		# Open file failed, inform the user and generate the new file.
+		print("Config file was missing\n" +
+			"Generating a new file.")
 
 	# Add all the types of garbage the user could want
 	cfData["DuplicateItems"] = "No"		# Repeated Items
@@ -43,8 +44,8 @@ def configFileValidateAndRepair():
 	# print(cfData)
 
 	# Save the updated ConfigFile
-	with open('config.json', 'w') as fp:
-	    json.dump(cfData, fp, indent=4)
+	with open('config.json', 'w') as configFile:
+		json.dump(cfData, configFile, indent=4)
 
 
 # Main function
@@ -56,4 +57,4 @@ def __main():
 
 
 if __name__ == '__main__':
-    __main()
+	__main()
