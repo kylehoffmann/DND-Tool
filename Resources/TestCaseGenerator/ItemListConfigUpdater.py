@@ -20,7 +20,7 @@ import json
 #	updates the config file with a number of items and the new item file name.
 def itemListConfigUpdater(readFileName):
 	# Initlaize Valiables
-	lineCount = 0
+	lineCount = -1
 
 	if (readFileName == ""):
 		# Make a default configFile
@@ -32,7 +32,7 @@ def itemListConfigUpdater(readFileName):
 			configFile = open('./config.json', 'r')
 			cfData = json.load(configFile)
 		except OSError:
-			# Open file failed, inform the user and exit the program.
+			# Open file failed, nothing is done as a file will be generated.
 		    pass
 			
 
@@ -64,6 +64,10 @@ def itemListConfigUpdater(readFileName):
 
 	# Print the number of lines. For testing.
 	# print(lineCount)
+
+	# Add a count of items to be used if it doesn't exist in the config file.
+	if 'itemsUsed' not in cfData:
+		cfData["UsedNumberOfItems"] = lineCount
 
 	# Update the config Files item count
 	cfData["MaxNumberOfItems"] = lineCount
