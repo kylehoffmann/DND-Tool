@@ -7,10 +7,14 @@
 
 import csv
 import json
+import os
 import sys
 
 # configFileValidateAndRepair
 def generateTestFile(writeFileName):
+
+	# Define the directory where the test files are to be saved.
+	testFileDir = 'testFiles'
 
 	# Open the Config File
 	# Try to open the config file
@@ -48,11 +52,8 @@ def generateTestFile(writeFileName):
 
 				# Count the number of items recoreded. This will be the item number of the next item to be recorded
 				counter += 1
-				print(counter)
 
 		# ToDo: Add a setting and rework this action to choose items randomly up to the requried number specifed in Config.json (Also not implmented)
-
-		print(tfData)
 
 	except OSError:
 		pass
@@ -80,7 +81,12 @@ def generateTestFile(writeFileName):
 	# Save all the generated rows as a file.
 	#		- ToDo: While writing a file there might be blank rows added depending on Config.Json {EmptyRows}
 	# ToDo: Optionally randomize the order of records depnding on Config.json {RandomValues}
-	outputFile = open(writeFileName, "w")
+
+	# Check if the test file directory exists
+	if not os.path.isdir('./' + testFileDir):
+		os.mkdir(testFileDir)
+
+	outputFile = open(testFileDir + "/" + writeFileName, "w")
 	for row in tfData:
 		# Make an empty string to print to a file
 		record = ""
@@ -116,7 +122,7 @@ def __main():
 
 	# Checks if the user offered and argument, we assume that this is a csv
 	if len(sys.argv) > 1:
-		readFileName = sys.argv[1]
+		writeFileName = sys.argv[1]
 
 	generateTestFile(writeFileName)
 
