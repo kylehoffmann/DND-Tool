@@ -29,17 +29,18 @@ def configFileValidateAndRepair():
 			"Generating a new file.")
 
 	# Add all the types of garbage the user could want
-	cfData["DuplicateItems"] = "No"		# Repeated Items
+	cfData["DuplicateItems"] = 0		# Number of repeated Items
 	cfData["EmptyColumns"] = "No"		# Columns with empty strings
-	cfData["EmptyRows"] = "No"			# Empty rows, or entires that are a blank line
+	cfData["EmptyRows"] = 0				# Empty rows, or entires that are a blank line
 	cfData["MissingColumns"] = "No"		# Records missing columns 
-	cfData["NonNumberIDs"] = "No"		# IDs that have values that arent a number
-	cfData["NegNumberIDs"] = "No"		# IDs with a negative integer number
-	cfData["NonIntNumberIDs"] = "No"	# IDs with a non-integer number
+	cfData["NonNumberIDs"] = 0			# IDs that have values that arent a number
+	cfData["NegNumberIDs"] = 0			# IDs with a negative integer number
+	cfData["NonIntNumberIDs"] = 0		# IDs with a non-integer number
 	cfData["FakeRarities"] = "No"		# Random words that arent Rarities set as a value
-	cfData["NegativeValues"] = "No"		# Negative Integers set as a value
-	cfData["NonIntValues"] = "No"		# Non-integer numbers set as a value
+	cfData["NegativeValues"] = 0		# Negative Integers set as a value
+	cfData["NonIntValues"] = 0			# Non-integer numbers set as a value
 	cfData["RandomValues"] = "No"		# Randomize the test element order in the test files
+	
 	# Print the new contents of the config file. For Testing
 	# print(cfData)
 

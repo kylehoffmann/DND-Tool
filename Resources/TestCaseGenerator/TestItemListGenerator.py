@@ -16,8 +16,8 @@ def insertRecordInNewFileData(fileData, newRecord, Randomize):
 		# If the goal isn't to randomize append data
 		fileData.append(newRecord)
 	else:
+		#Choose a random place in the current file data and add the record there
 		insertIndex = random.randrange(1, len(fileData)+1)
-		print(insertIndex)
 		fileData.insert(insertIndex, newRecord)
 
 
@@ -76,14 +76,102 @@ def generateTestFile(writeFileName):
 	except OSError:
 		pass
 
-	# Generate Repeated Items
-	
-	# Generate Columns with empty strings
+	# Generate Repeated Items the config says to. This should go immendiately 
+	#	after the valid items have been loaded and before anything else is added to the file. 
+	if (isinstance(cfData["DuplicateItems"], int) and cfData["DuplicateItems"] > 0):
+
+		# Generate the number of items the config file says to
+		for i in range(0, cfData["DuplicateItems"]):
+			# choose a random item to duplicate. This can pick the same item multiple times.
+			duplicateIndex = random.randrange(1, len(tfData))
+			insertRecordInNewFileData(tfData, tfData[duplicateIndex], cfData["RandomValues"])
+
+	# Find a free starting item index. 
+	# 		- This assumes that the input file is using the lowest sequential ids. It also adds space for duplicate items and empty rows.
+	startingIndex = 1
+	if isinstance(cfData["MaxNumberOfItems"], int):
+		startingIndex += cfData["MaxNumberOfItems"]
+	if isinstance(cfData["DuplicateItems"], int):
+		startingIndex += cfData["DuplicateItems"]
+	if isinstance(cfData["EmptyRows"], int):
+		startingIndex += cfData["EmptyRows"]
+
+	# Generate entries with empty coulmns if config says to
+	if (cfData["EmptyColumns"].lower() == "yes" or cfData["EmptyColumns"].lower() == "y" ):
+
+		# Loop through every possible combination of empty columns.
+		#		- using modulus and divison the iteration number is used to toggle writing on the column.
+		for i in range(0, 2**len(tfData[0])):
+			# Initalize the new entry
+			emptyColumnEntry = []
+
+			# Add ID (or not)
+			if i % 2 == 0:
+				emptyColumnEntry.append(str(i + startingIndex))
+			else:
+				emptyColumnEntry.append("")
+			
+			# Add an item name (or not)
+			if int(i / 2) % 2 == 0:
+				emptyColumnEntry.append("EC Name - " + str(i))
+			else:
+				emptyColumnEntry.append("")
+
+			# Add an item discription (or not)
+			if int(i / 4) % 2 == 0:
+				emptyColumnEntry.append("EC Discription - " + str(i))
+			else:
+				emptyColumnEntry.append("")
+
+			# Add an item value (or not)
+			if int(i / 8) % 2 == 0:
+				emptyColumnEntry.append(str(i))
+			else:
+				emptyColumnEntry.append("")
+
+			# Add the generated entry
+			insertRecordInNewFileData(tfData, emptyColumnEntry, cfData["RandomValues"])
+
 	
 	# Generate Empty rows, or entires that are a blank line
+	if (isinstance(cfData["EmptyRows"], int) and cfData["EmptyRows"] > 0):
+
+		# Generate the number of empty columns the config file says to
+		for i in range(0, cfData["EmptyRows"]):
+			# Save an empty row.
+			insertRecordInNewFileData(tfData, [], cfData["RandomValues"])
 	
-	# Generate Records missing columns 
+	# Update the starting index
+	startingIndex += 2**len(tfData[0])
 	
+	# Generate Records missing columns  if config says to
+	if (cfData["MissingColumns"].lower() == "yes" or cfData["MissingColumns"].lower() == "y" ):
+
+		# Loop through every possible combination of missing columns.
+		#		- using modulus and divison the iteration number is used to toggle writing on the column.
+		for i in range(0, 2**len(tfData[0])):
+			# Initalize the new entry
+			emptyColumnEntry = []
+
+			# Add ID (or not)
+			if i % 2 == 0:
+				emptyColumnEntry.append(str(i + startingIndex))
+			
+			# Add an item name (or not)
+			if int(i / 2) % 2 == 0:
+				emptyColumnEntry.append("MC Name - " + str(i))
+
+			# Add an item discription (or not)
+			if int(i / 4) % 2 == 0:
+				emptyColumnEntry.append("MC Discription - " + str(i))
+
+			# Add an item value (or not)
+			if int(i / 8) % 2 == 0:
+				emptyColumnEntry.append(str(i))
+
+			# Add the generated entry
+			insertRecordInNewFileData(tfData, emptyColumnEntry, cfData["RandomValues"])
+
 	# Generate IDs that have values that arent a number
 	
 	# Generate IDs with a negative integer number
