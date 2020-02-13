@@ -1,6 +1,8 @@
 # testItemListGenerator.py
 #
-# Generates a test file for the user, the specifics for test cases are defined in config.json
+# Generates a test file for the user, the specifics for test cases are defined in config.json. 
+#
+# Note: by default ConfigTool.py sets all values to generate only a list of normal items, in an expected order.
 #
 # Coded By:
 # Kyle Hoffmann
@@ -19,6 +21,25 @@ def insertRecordInNewFileData(fileData, newRecord, Randomize):
 		#Choose a random place in the current file data and add the record there
 		insertIndex = random.randrange(1, len(fileData)+1)
 		fileData.insert(insertIndex, newRecord)
+
+def generateFakeRatiry(startingIndex, index, FakeRarity):
+	# Initalize the new entry
+	newColumn = []
+
+	# Add a non number ID
+	newColumn.append(str(startingIndex + index ))
+	
+	# Add an item name
+	newColumn.append("NonIntID Name - " + str(index))
+
+	# Add an item discription
+	newColumn.append("NonIntID Discription - " + str(index))
+
+	# Add an item value 
+	newColumn.append(FakeRarity)
+
+	# Return the generated entry
+	return newColumn
 
 
 
@@ -51,7 +72,7 @@ def generateTestFile(writeFileName):
 	counter = 0
 
 	try:
-		# Open the list of items and save the number of items specified in Config.json {UsedNumberOfItems}
+		# Open the list of items and save the number of items specified in Config.json, "UsedNumberOfItems"
 		with open(cfData["itemList"], newline='') as itemCSVFile:
 			itemCSVreader = csv.reader(itemCSVFile, delimiter=',')
 			for row in itemCSVreader: 
@@ -76,8 +97,9 @@ def generateTestFile(writeFileName):
 	except OSError:
 		pass
 
-	# Generate Repeated Items the config says to. This should go immendiately 
-	#	after the valid items have been loaded and before anything else is added to the file. 
+	# Generate a number Repeated Items defined by "DuplicateItems" in config.json. 
+	#	This should go immendiately after the valid items have been loaded and before 
+	#	anything else is added to the file. 
 	if (isinstance(cfData["DuplicateItems"], int) and cfData["DuplicateItems"] > 0):
 
 		# Generate the number of items the config file says to
@@ -96,7 +118,8 @@ def generateTestFile(writeFileName):
 	if isinstance(cfData["EmptyRows"], int):
 		startingIndex += cfData["EmptyRows"]
 
-	# Generate entries with empty coulmns if config says to
+	# Generate entries with empty coulmns if "EmptyColumns" in config.json is 
+	#	"yes" or "y", case insensitive. 
 	if (cfData["EmptyColumns"].lower() == "yes" or cfData["EmptyColumns"].lower() == "y" ):
 
 		# Loop through every possible combination of empty columns.
@@ -132,8 +155,12 @@ def generateTestFile(writeFileName):
 			# Add the generated entry
 			insertRecordInNewFileData(tfData, emptyColumnEntry, cfData["RandomValues"])
 
+		# Update the starting index
+		startingIndex += 2**len(tfData[0])
+
 	
-	# Generate Empty rows, or entires that are a blank line
+	# Generate Empty rows, or entires that are a blank line. The number of
+	#	empty rows is decided by "EmptyRows" in config.json
 	if (isinstance(cfData["EmptyRows"], int) and cfData["EmptyRows"] > 0):
 
 		# Generate the number of empty columns the config file says to
@@ -141,59 +168,230 @@ def generateTestFile(writeFileName):
 			# Save an empty row.
 			insertRecordInNewFileData(tfData, [], cfData["RandomValues"])
 	
-	# Update the starting index
-	startingIndex += 2**len(tfData[0])
-	
-	# Generate Records missing columns  if config says to
+	# Generate Records missing columns  if config.json "MissingColumns" is "yes" or "y", case insensitive.
 	if (cfData["MissingColumns"].lower() == "yes" or cfData["MissingColumns"].lower() == "y" ):
 
 		# Loop through every possible combination of missing columns.
 		#		- using modulus and divison the iteration number is used to toggle writing on the column.
-		for i in range(0, 2**len(tfData[0])):
+		for i in range(0, 2**len(tfData[0])-1):
 			# Initalize the new entry
-			emptyColumnEntry = []
+			missingColumnEntry = []
 
 			# Add ID (or not)
 			if i % 2 == 0:
-				emptyColumnEntry.append(str(i + startingIndex))
+				missingColumnEntry.append(str(i + startingIndex))
 			
 			# Add an item name (or not)
 			if int(i / 2) % 2 == 0:
-				emptyColumnEntry.append("MC Name - " + str(i))
+				missingColumnEntry.append("MC Name - " + str(i))
 
 			# Add an item discription (or not)
 			if int(i / 4) % 2 == 0:
-				emptyColumnEntry.append("MC Discription - " + str(i))
+				missingColumnEntry.append("MC Discription - " + str(i))
 
 			# Add an item value (or not)
 			if int(i / 8) % 2 == 0:
-				emptyColumnEntry.append(str(i))
+				missingColumnEntry.append(str(i))
 
 			# Add the generated entry
-			insertRecordInNewFileData(tfData, emptyColumnEntry, cfData["RandomValues"])
+			insertRecordInNewFileData(tfData, missingColumnEntry, cfData["RandomValues"])
 
-	# Generate IDs that have values that arent a number
+		# Update the starting index
+		startingIndex += 2**len(tfData[0])
+
+	# Generate IDs that have values that arent a number. The number of entires
+	# 	- 	are defined by "NonNumberIDs" in config.json
+	if (isinstance(cfData["NonNumberIDs"], int) and cfData["NonNumberIDs"] > 0):
+
+		# Loop for each non number id requested
+		for i in range(0, cfData["NonNumberIDs"]):
+			# Initalize the new entry
+			nonNumIdEntry = []
+
+			# Add a non number ID
+			nonNumIdEntry.append("Non-numbered Id: " + str(i + startingIndex))
+			
+			# Add an item name
+			nonNumIdEntry.append("NonNumID Name - " + str(i))
+
+			# Add an item discription
+			nonNumIdEntry.append("NonNumID Discription - " + str(i))
+
+			# Add an item value 
+			nonNumIdEntry.append(str(i * 10))
+
+			# Add the generated entry
+			insertRecordInNewFileData(tfData, nonNumIdEntry, cfData["RandomValues"])
+
 	
-	# Generate IDs with a negative integer number
+	# Generate IDs with a negative integer number. The number of entires
+	# 	- 	are defined by "NegNumberIDs" in config.json
+	if (isinstance(cfData["NegNumberIDs"], int) and cfData["NegNumberIDs"] > 0):
+
+		# Loop for each non number id requested
+		for i in range(0, cfData["NegNumberIDs"]):
+			# Initalize the new entry
+			negIDEntry = []
+
+			# Add a non number ID
+			negIDEntry.append(str((i + 1) * -1))
+			
+			# Add an item name
+			negIDEntry.append("NegNumID Name - " + str(i))
+
+			# Add an item discription
+			negIDEntry.append("NegNumID Discription - " + str(i))
+
+			# Add an item value 
+			negIDEntry.append(str(i * 10))
+
+			# Add the generated entry
+			insertRecordInNewFileData(tfData, negIDEntry, cfData["RandomValues"])
 	
-	# Generate IDs with a non-integer number
+	# Generate IDs with a non-integer number. The number of entires
+	# 	- 	are defined by "NonIntNumberIDs" in config.json
+	if (isinstance(cfData["NonIntNumberIDs"], int) and cfData["NonIntNumberIDs"] > 0):
+
+		# Loop for each non number id requested
+		for i in range(2, cfData["NonIntNumberIDs"]+2):
+			# Initalize the new entry
+			nonIntIDEntry = []
+
+			# Add a non number ID
+			nonIntIDEntry.append(str((i+1)**2 / i ))
+			
+			# Add an item name
+			nonIntIDEntry.append("NonIntID Name - " + str(i))
+
+			# Add an item discription
+			nonIntIDEntry.append("NonIntID Discription - " + str(i))
+
+			# Add an item value 
+			nonIntIDEntry.append(str(i * 10))
+
+			# Add the generated entry
+			insertRecordInNewFileData(tfData, nonIntIDEntry, cfData["RandomValues"])
 	
-	# Generate Random words that arent Rarities set as a value
+	# Generate Random words that arent Rarities set as a value. This is only done if
+	# 	- 	"FakeRarities" is "yes" or "y" in config.json, case insenstive
+	if (cfData["FakeRarities"].lower() == "yes" or cfData["FakeRarities"].lower() == "y"):
+
+		# Initalize the index
+		index = 0
+
+		# Generate a new fake rarity record
+		fakeRarityEntry = generateFakeRatiry(startingIndex, index, "Ant")
+		# Add the generated entry
+		insertRecordInNewFileData(tfData, fakeRarityEntry, cfData["RandomValues"])
+		# Increment the index
+		index += 1
+
+		# Generate a new fake rarity record
+		fakeRarityEntry = generateFakeRatiry(startingIndex, index, "Bee")
+		# Add the generated entry
+		insertRecordInNewFileData(tfData, fakeRarityEntry, cfData["RandomValues"])
+		# Increment the index
+		index += 1
+
+		# Generate a new fake rarity record
+		fakeRarityEntry = generateFakeRatiry(startingIndex, index, "Cricket")
+		# Add the generated entry
+		insertRecordInNewFileData(tfData, fakeRarityEntry, cfData["RandomValues"])
+		# Increment the index
+		index += 1
+
+		# Generate a new fake rarity record
+		fakeRarityEntry = generateFakeRatiry(startingIndex, index, "Dragonfly")
+		# Add the generated entry
+		insertRecordInNewFileData(tfData, fakeRarityEntry, cfData["RandomValues"])
+		# Increment the index
+		index += 1
+
+		# Generate a new fake rarity record
+		fakeRarityEntry = generateFakeRatiry(startingIndex, index, "Earwig")
+		# Add the generated entry
+		insertRecordInNewFileData(tfData, fakeRarityEntry, cfData["RandomValues"])
+		# Increment the index
+		index += 1
+
+		# Update the starting index
+		startingIndex += 5
 	
-	# Generate Negative Integers set as a value
+	# Generate Negative Integers set as a value. The number of entires
+	# 	- 	are defined by "NegativeValues" in config.json
+	if (isinstance(cfData["NegativeValues"], int) and cfData["NegativeValues"] > 0):
+
+		# Loop for each non number id requested
+		for i in range(0, cfData["NegativeValues"]):
+			# Initalize the new entry
+			negativeValueEntry = []
+
+			# Add a non number ID
+			negativeValueEntry.append(str(startingIndex + i))
+			
+			# Add an item name
+			negativeValueEntry.append("NegValVal Name - " + str(i))
+
+			# Add an item discription
+			negativeValueEntry.append("NegValVal Discription - " + str(i))
+
+			# Add an item value 
+			negativeValueEntry.append(str((i + 1) * -1))
+
+			# Add the generated entry
+			insertRecordInNewFileData(tfData, negativeValueEntry, cfData["RandomValues"])
+
+		# Update the starting index
+		startingIndex += cfData["NegativeValues"]
 	
-	# Generate Non-integer numbers set as a value
+	# Generate Non-integer numbers set as a value. The number of entires
+	# 	- 	are defined by "NonIntValues" in config.json
+	if (isinstance(cfData["NonIntValues"], int) and cfData["NonIntValues"] > 0):
+
+		# Loop for each non number id requested
+		for i in range(0, cfData["NonIntValues"]):
+			# Initalize the new entry
+			nonIntValEntry = []
+
+			# Add a non number ID
+			nonIntValEntry.append(str(startingIndex + i))
+			
+			# Add an item name
+			nonIntValEntry.append("NonIntVal Name - " + str(i))
+
+			# Add an item discription
+			nonIntValEntry.append("NonIntVal Discription - " + str(i))
+
+			# Add an item value 
+			nonIntValEntry.append(str((i+2)**2 / (i+1)))
+
+			# Add the generated entry
+			insertRecordInNewFileData(tfData, nonIntValEntry, cfData["RandomValues"])
+
+		# Update the starting index
+		startingIndex += cfData["NonIntValues"]
 
 	# Save all the generated rows as a file.
-	#		- ToDo: While writing a file there might be blank rows added depending on Config.Json {EmptyRows}
 	# ToDo: Optionally randomize the order of records depnding on Config.json {RandomValues}
-
 	# Check if the test file directory exists
 	if not os.path.isdir('./' + testFileDir):
 		os.mkdir(testFileDir)
 
 	outputFile = open(testFileDir + "/" + writeFileName, "w")
+
+	# Add a value to watch for the first line
+	firstRow = True
+
+	# Loop through the file data in memory to be saved in the file itself.
 	for row in tfData:
+
+		# Skip the first entry, but after add a newline before adding the next entry
+		if firstRow:
+			firstRow = False
+		else:
+			# Add a newline to the file
+			outputFile.write("\n")
+
 		# Make an empty string to print to a file
 		record = ""
 
@@ -211,7 +409,7 @@ def generateTestFile(writeFileName):
 			record += cell
 
 		# Write a record in the output file
-		outputFile.write(record + "\n")
+		outputFile.write(record)
 
 	# Finish writing the file
 	outputFile.close()
